@@ -1,0 +1,13 @@
+---
+- name: Assert OS distribution
+  hosts: planetexpress
+  connection: ssh
+  gather_facts: true
+
+  tasks:
+
+  - name: Assert that the targets have a ansible_distribution value of Ubuntu
+    ansible.builtin.assert:
+      that: ansible_facts.os_family == "RedHat"
+      fail_msg: "You aren't RedHat!"
+      success_msg: "You are using RedHat! You must be Farnsworth!"
