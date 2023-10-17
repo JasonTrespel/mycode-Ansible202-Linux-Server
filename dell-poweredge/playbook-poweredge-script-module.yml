@@ -1,0 +1,21 @@
+---
+- name: Using the Ansible script module
+  hosts: localhost       # group name
+  connection: local      # we need to run HTTP(s) to talk to the RedFish APIs
+  gather_facts: false
+
+  tasks:
+
+  - name: run files/GetSetPowerStateREDFISH.py
+    script: GetSetPowerStateREDFISH.py -ip 10.0.0.89 -u root -p r0gerwilc0 --set On
+    args:
+      executable: python3
+    register: results
+
+  - name: Display the results we just collected
+    debug:
+      var: results
+
+  # This script is challenge 01 from Lab 20
+  # Take a copied python script for REDFISH to check on power state 
+  # and turn into Ansible playbook.
