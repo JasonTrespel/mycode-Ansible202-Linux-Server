@@ -1,0 +1,50 @@
+---
+- name: Use Redfish to Eject Virtual Media
+  hosts: redfish
+  connection: local
+  gather_facts: false
+
+  collections:
+    community.general
+
+  tasks:
+  - name: Create session
+    community.general.redfish_command:
+      category: Sessions
+      command: CreateSession
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+    register: result
+  - debug:
+        var: result 
+  - pause:
+
+  - name: get info
+    community.general.redfish_info:
+      baseuri: "{{ baseuri }}"
+      auth_token: "{{ result.session.token }}"
+    register: results
+
+  - debug:
+      var: results  
+
+  - pause:
+
+  - name: Set chassis indicator LED to blink using security token for auth
+    community.general.redfish_command:
+      category: Chassis
+      command: IndicatorLedBlink
+      resource_id: System.Embedded.1
+      baseuri: "{{ baseuri }}"
+      auth_token: "{{ result.session.token }}"
+
+  - pause:
+
+  - name: Delete the Session
+    community.general.redfish_command:
+       category: Sessions
+       command: DeleteSession
+       baseuri: "{{ baseuri }}"
+       auth_token: "{{ result.session.token }}"
+       session_uri: "{{ result.session.uri }}"
