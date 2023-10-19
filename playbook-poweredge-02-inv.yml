@@ -35,4 +35,3 @@
 
 # to run this solution, you must provide values for "ip", "user", and "pw". An example of this is,
 # ansible-playbook ~/mycode/playbook-poweredge-02-inv.yml -i inv/dev/poweredge_hosts
-
