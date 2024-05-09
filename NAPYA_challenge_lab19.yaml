@@ -1,0 +1,30 @@
+---
+- name: Query an API and display the data
+  hosts: localhost
+  connection: local
+
+  vars:
+    link: "http://api.citybik.es/v2/networks"
+
+  tasks:
+  - name: Send an HTTP GET
+    ansible.builtin.uri:
+      method: GET
+      url: "{{ link }}"
+    register: data
+
+  # this task will display json + optional payload
+ # - name: Debug shows what "data" is
+    # ansible.builtin.debug:
+      # msg: "{{ data }}"
+
+    # this task will remove info related to number of queries left for the API
+  - name: Slice "data" to remove optional payload
+    ansible.builtin.debug:
+      msg: "{{ data.get('json') }}"
+
+   # this task will loop and slice to display the company in location
+  - name: Display company and location from "data"
+    ansible.builtin.debug:
+      msg: "The {{ item.get('company') }} is located in {{ item.get('location') }}"
+    loop: "{{ data.get('json').get('networks') }}"
